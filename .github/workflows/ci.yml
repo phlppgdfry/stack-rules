@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - run: npm run check
+      - name: CLI smoke test through npx
+        run: |
+          mkdir /tmp/demo && cd /tmp/demo
+          npx --yes "$GITHUB_WORKSPACE" add nextjs-app-router drizzle-orm --all-formats
+          test -s CLAUDE.md && test -s AGENTS.md && test -s .cursor/rules/drizzle-orm.mdc

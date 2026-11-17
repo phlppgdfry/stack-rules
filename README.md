@@ -1,90 +1,101 @@
-# stack-rules 🤖
+<h1 align="center">stack-rules</h1>
 
-> Ready-to-use `CLAUDE.md` and `.cursorrules` files for popular tech stacks — with explanations for every rule.
+<p align="center">
+  <b>Curated AI coding rules per tech stack, with the reasoning behind every rule.</b><br>
+  One source file per stack → <code>CLAUDE.md</code>, <code>AGENTS.md</code>, Cursor, Copilot and Windsurf.
+</p>
 
-Most AI rule collections are just links to other repos. **stack-rules** gives you the actual file content, tuned per stack, with comments explaining *why* each rule exists so you can adapt it to your project.
+<p align="center">
+  <a href="https://phlppgdfry.github.io/stack-rules/"><b>▶ Open the rule picker</b></a> ·
+  <a href="#use-it-in-10-seconds">CLI</a> ·
+  <a href="#stacks">Stacks</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
+</p>
 
-Works with **Claude Code**, **Cursor**, **Windsurf**, **GitHub Copilot**, and any tool that reads project-level AI instructions.
+<p align="center">
+  <a href="https://github.com/phlppgdfry/stack-rules/actions/workflows/ci.yml"><img src="https://github.com/phlppgdfry/stack-rules/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/dependencies-0-0f8a5f" alt="Zero dependencies">
+  <img src="https://img.shields.io/badge/formats-5-0f8a5f" alt="Five output formats">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT"></a>
+</p>
 
----
+<p align="center">
+  <a href="https://phlppgdfry.github.io/stack-rules/"><img src="docs/media/demo.gif" width="820" alt="Picking Next.js and Drizzle, switching between Claude Code, Cursor and AGENTS.md output, and copying the install command"></a>
+</p>
 
-## Why this exists
+## Why
 
-AI coding assistants are only as good as the context you give them. A generic prompt produces generic code. A well-crafted `CLAUDE.md` tells your assistant:
+An AI assistant writes the code its context describes. Without context it writes the average of
+its training data: Next.js 13 patterns in a Next.js 15 app, `useEffect` data fetching in Server
+Components, Prisma clients created per request.
 
-- Which version of the framework you're using (Next.js 13 vs 15 is a completely different mental model)
-- Your project's conventions (file structure, naming, state management)
-- What to avoid (legacy patterns, deprecated APIs)
-- Which libraries you use for common tasks
+A good rules file fixes that, but most collections are either links to other repos or bare lists
+of "do X, don't do Y". Here every rule says **what breaks without it**, so you can keep, change or
+delete it with confidence.
 
-This repo collects that institutional knowledge per stack so you don't have to write it from scratch.
+## Use it in 10 seconds
 
----
+**In the browser:** open the [rule picker](https://phlppgdfry.github.io/stack-rules/), select your
+stacks and tool, press **Copy file**. Your selection is in the URL, so you can share it with your team.
+
+**From the terminal** (Node 18+, no install, no dependencies):
+
+```bash
+npx github:phlppgdfry/stack-rules list
+npx github:phlppgdfry/stack-rules add nextjs-app-router drizzle-orm
+npx github:phlppgdfry/stack-rules add fastapi --format agents,cursor
+npx github:phlppgdfry/stack-rules add hono --all-formats --dry-run
+```
+
+Existing files are never overwritten silently: the CLI asks first (or skips when there is no
+terminal to ask in). Use `--force` when you mean it.
+
+| `--format` | Writes | Read by |
+| --- | --- | --- |
+| `claude` *(default)* | `CLAUDE.md` | Claude Code |
+| `agents` | `AGENTS.md` | Codex, Jules, Amp and other `AGENTS.md` readers |
+| `cursor` | `.cursor/rules/<stack>.mdc` | Cursor project rules (one file per stack) |
+| `copilot` | `.github/copilot-instructions.md` | GitHub Copilot |
+| `windsurf` | `.windsurfrules` | Windsurf |
+
+All formats are generated from the same `stacks/<stack>/CLAUDE.md`, so they cannot drift apart.
 
 ## Stacks
 
-| Stack | CLAUDE.md | .cursorrules |
-|---|---|---|
-| [Next.js 15 App Router](./stacks/nextjs-app-router/) | ✅ | ✅ |
-| [Nuxt 3](./stacks/nuxt3/) | ✅ | ✅ |
-| [SvelteKit](./stacks/sveltekit/) | ✅ | ✅ |
-| [Hono (Cloudflare Workers)](./stacks/hono/) | ✅ | ✅ |
-| [FastAPI](./stacks/fastapi/) | ✅ | ✅ |
-| [Drizzle ORM](./stacks/drizzle-orm/) | ✅ | ✅ |
-| [Prisma](./stacks/prisma/) | ✅ | ✅ |
-| [React Native (Expo)](./stacks/react-native-expo/) | ✅ | ✅ |
+| Stack | Rules | Highlights |
+| --- | --- | --- |
+| [Next.js 15 App Router](./stacks/nextjs-app-router/) | 10 sections | Server Components by default, Next 15 caching defaults, Server Actions |
+| [SvelteKit](./stacks/sveltekit/) | 8 sections | Svelte 5 runes, load functions, form actions |
+| [Hono](./stacks/hono/) | 12 sections | Cloudflare Workers bindings, validators, typed context, RPC client |
+| [FastAPI](./stacks/fastapi/) | 8 sections | Pydantic v2, async dependencies, response models |
+| [Drizzle ORM](./stacks/drizzle-orm/) | 9 sections | Schema-first types, both query APIs, migrations workflow |
+| [Prisma](./stacks/prisma/) | 9 sections | Client singleton, transactions, type inference, migrations |
 
-More coming: Laravel, Django, Rails, tRPC, Turso, Astro.
+Planned: Nuxt, Expo, Laravel, Django, Rails, Astro. A stack only appears in this table once its
+rules exist — CI checks that the table and the `stacks/` folder match.
 
----
+## Combining stacks
 
-## How to use
-
-**Option 1 — Copy directly**
-
-Browse to your stack folder and copy `CLAUDE.md` into your project root.
-
-**Option 2 — CLI (npx)**
+Select more than one stack and you get a single file: one title, then a section per stack, in the
+order you picked them. Headings inside code blocks (Python comments, shell comments) are left alone.
 
 ```bash
-npx stack-rules add nextjs-app-router
+npx github:phlppgdfry/stack-rules add nextjs-app-router drizzle-orm
+# → CLAUDE.md: "Project AI coding rules — Next.js 15 App Router + Drizzle ORM"
 ```
 
-Copies the right files into your current directory. Existing files are not overwritten — it asks first.
-
-**Option 3 — Combine stacks**
-
-Each file is modular. If you use Next.js + Drizzle + Tailwind, copy the relevant sections from each:
+## Quality checks
 
 ```bash
-npx stack-rules add nextjs-app-router drizzle-orm
-# merges both CLAUDE.md files into one
+npm test        # CLI behaviour: formats, merging, never overwriting without --force
+npm run check   # README ↔ stacks/ in sync, every stack has sections and reasoning
+npm run site    # builds the rule picker into _site/
 ```
-
----
-
-## File formats
-
-### `CLAUDE.md`
-Read by **Claude Code** automatically when present in the project root. Also works as a project instructions file for any assistant that supports markdown context.
-
-### `.cursorrules`
-Read by **Cursor** and **Windsurf**. Same content as CLAUDE.md but in the format those tools expect.
-
----
 
 ## Contributing
 
-Each stack folder has a `README.md` explaining the rationale. If you have a correction, addition, or a new stack:
-
-1. Fork the repo
-2. Add or edit files in `stacks/<stack-name>/`
-3. Include comments in the rule files explaining *why* each rule exists
-4. Open a PR
-
-Rules without explanations will not be merged — the *why* is the point.
-
----
+Every rule needs a *why*. See [CONTRIBUTING.md](CONTRIBUTING.md): add `stacks/<name>/CLAUDE.md`,
+add the stack to the table above, run `npm run check`.
 
 ## License
 

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stack-rules — AI coding rules per stack</title>
+<meta name="description" content="Pick your stack, get a CLAUDE.md, AGENTS.md, Cursor rule or Copilot instructions file — with the reasoning behind every rule.">
+<meta property="og:title" content="stack-rules">
+<meta property="og:description" content="Curated AI coding rules per tech stack, with the why behind every rule.">
+<meta property="og:image" content="https://phlppgdfry.github.io/stack-rules/og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23111827'/><path d='M9 11h14M9 16h10M9 21h7' stroke='%2334d399' stroke-width='3' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --ink: #14161a; --muted: #5d6370; --line: #e4e4df;
+    --accent: #0f8a5f; --accent-ink: #ffffff; --accent-soft: #e3f4ec; --code: #f1f1ed; --chip: #eef0f3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d0f12; --panel: #15181d; --ink: #e9ebef; --muted: #9aa1ad; --line: #262a31;
+      --accent: #34d399; --accent-ink: #062016; --accent-soft: #10291f; --code: #1b1f25; --chip: #1f242b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d0f12; --panel: #15181d; --ink: #e9ebef; --muted: #9aa1ad; --line: #262a31;
+    --accent: #34d399; --accent-ink: #062016; --accent-soft: #10291f; --code: #1b1f25; --chip: #1f242b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 Inter, system-ui, sans-serif; }
+  a { color: var(--accent); }
+  code, pre, .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 44px 0 18px; display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; flex-wrap: wrap; }
+  h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0 0 10px; letter-spacing: -0.02em; }
+  h1 span { color: var(--accent); }
+  .lede { color: var(--muted); max-width: 640px; margin: 0; font-size: 17px; }
+  .top-links { display: flex; gap: 10px; align-items: center; }
+  .btn { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 9px; padding: 8px 13px; font: 500 14px Inter, sans-serif; cursor: pointer; text-decoration: none; display: inline-flex; gap: 7px; align-items: center; }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn:focus-visible, .card:focus-visible, .tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .step { font: 600 12px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 26px 0 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .card { text-align: left; border: 1.5px solid var(--line); background: var(--panel); border-radius: 12px; padding: 14px; cursor: pointer; color: var(--ink); font: inherit; position: relative; transition: border-color .15s, transform .15s; }
+  .card:hover { transform: translateY(-1px); border-color: var(--muted); }
+  .card[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+  .card[aria-pressed="true"]::after { content: "✓"; position: absolute; top: 10px; right: 12px; color: var(--accent); font-weight: 700; }
+  .card b { display: block; font-size: 15px; margin-bottom: 3px; }
+  .card small { color: var(--muted); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab { border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 7px 12px; border-radius: 999px; cursor: pointer; font: 500 13px Inter, sans-serif; }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .out { margin: 14px 0 60px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); overflow: hidden; }
+  .out-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .path { font-size: 13px; color: var(--muted); }
+  .path b { color: var(--ink); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .cmd { display: flex; align-items: center; gap: 10px; background: var(--code); padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; overflow-x: auto; white-space: nowrap; }
+  .cmd .prompt { color: var(--accent); user-select: none; }
+  .preview { padding: 6px 26px 26px; max-height: 70vh; overflow: auto; }
+  .preview.raw { padding: 0; }
+  .preview pre { background: var(--code); padding: 14px; border-radius: 10px; overflow-x: auto; font-size: 13px; }
+  .preview.raw pre { margin: 0; border-radius: 0; background: transparent; padding: 18px 22px; white-space: pre-wrap; }
+  .preview code { font-size: 0.92em; }
+  .preview :not(pre) > code { background: var(--code); padding: 1px 5px; border-radius: 5px; }
+  .preview h1 { font-size: 26px; } .preview h2 { font-size: 20px; margin-top: 30px; border-top: 1px solid var(--line); padding-top: 18px; }
+  .preview table { border-collapse: collapse; } .preview td, .preview th { border: 1px solid var(--line); padding: 5px 9px; }
+  .empty { padding: 50px; text-align: center; color: var(--muted); }
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 9px; opacity: 0; transition: .2s; pointer-events: none; font-weight: 500; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .why { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 6px; }
+  .why div { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; color: var(--muted); font-size: 14px; }
+  .why b { color: var(--ink); display: block; }
+  footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; padding: 20px 0 40px; }
+  @media (max-width: 560px) { .preview { padding: 4px 14px 18px; } header { padding-top: 28px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>stack-<span>rules</span></h1>
+      <p class="lede">Pick your stack. Get the rules file your AI assistant reads — with the <em>why</em> behind every rule, so you can adapt it instead of copying blindly.</p>
+    </div>
+    <div class="top-links">
+      <button class="btn" id="theme" aria-label="Toggle dark mode">◐</button>
+      <a class="btn" href="https://github.com/phlppgdfry/stack-rules">★ GitHub</a>
+    </div>
+  </header>
+
+  <div class="why">
+    <div><b>One source, five formats</b>CLAUDE.md, AGENTS.md, Cursor, Copilot and Windsurf are generated from the same file. They never drift.</div>
+    <div><b>Combine stacks</b>Next.js + Drizzle? Select both; you get one file with one title and a section per stack.</div>
+    <div><b>Reasoned, not dumped</b>Every rule says what breaks without it. Rules without a reason are not accepted.</div>
+  </div>
+
+  <div class="step">1 · Pick one or more stacks</div>
+  <div class="grid" id="stacks" role="group" aria-label="Stacks"></div>
+
+  <div class="step">2 · Pick the tool you use</div>
+  <div class="tabs" id="formats" role="tablist" aria-label="Output format"></div>
+
+  <div class="out" id="out">
+    <div class="out-bar">
+      <div class="path mono" id="path"></div>
+      <div class="actions">
+        <button class="btn" id="view" aria-pressed="false">Raw</button>
+        <button class="btn" id="download">Download</button>
+        <button class="btn primary" id="copy">Copy file</button>
+      </div>
+    </div>
+    <div class="cmd mono"><span class="prompt">$</span><span id="cmd"></span><button class="btn" id="copycmd" style="margin-left:auto;padding:4px 10px">Copy</button></div>
+    <div class="preview" id="preview"></div>
+  </div>
+</div>
+<footer><div class="wrap">MIT · Built by <a href="https://github.com/phlppgdfry">Philippe Godfroy</a> · Found a rule that is wrong or outdated? <a href="https://github.com/phlppgdfry/stack-rules/issues/new">Open an issue</a>.</div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const STACKS = /*STACKS*/[];
+const FORMATS = [
+  { id: "claude", label: "Claude Code", file: () => "CLAUDE.md" },
+  { id: "agents", label: "AGENTS.md (Codex, Jules…)", file: () => "AGENTS.md" },
+  { id: "cursor", label: "Cursor", file: (ids) => ids.map((i) => `.cursor/rules/${i}.mdc`).join(", ") },
+  { id: "copilot", label: "GitHub Copilot", file: () => ".github/copilot-instructions.md" },
+  { id: "windsurf", label: "Windsurf", file: () => ".windsurfrules" },
+];
+const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+const params = new URLSearchParams(location.search);
+let selected = (params.get("stacks") || store.get("sr-stacks") || "nextjs-app-router").split(",").filter((id) => STACKS.some((s) => s.id === id));
+if (!selected.length) selected = [STACKS[0].id];
+let format = params.get("format") || store.get("sr-format") || "claude";
+let raw = false;
+
+function demote(md) {
+  let fence = false;
+  return md.split("\n").map((l) => { if (/^\s*(```|~~~)/.test(l)) fence = !fence; return !fence && /^#{1,5}\s/.test(l) ? "#" + l : l; }).join("\n");
+}
+function build() {
+  const pick = selected.map((id) => STACKS.find((s) => s.id === id));
+  if (format === "cursor") return pick.map((s) => `---\ndescription: ${s.title} conventions (from stack-rules)\nalwaysApply: true\n---\n\n${s.body}\n`).join("\n\n");
+  if (pick.length === 1) return pick[0].body + "\n";
+  return `# Project AI coding rules — ${pick.map((s) => s.title).join(" + ")}\n\n<!-- Generated by stack-rules (${pick.map((s) => s.id).join(", ")}). Edit freely: this file is yours now. -->\n\n` + pick.map((s) => demote(s.body)).join("\n\n---\n\n") + "\n";
+}
+function toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1600); }
+async function copy(text, msg) { try { await navigator.clipboard.writeText(text); toast(msg); } catch { toast("Copy blocked by the browser — use Download"); } }
+
+function render() {
+  document.getElementById("stacks").innerHTML = STACKS.map((s) => `<button class="card" aria-pressed="${selected.includes(s.id)}" data-id="${s.id}"><b>${s.title}</b><small>${s.sections} sections · ${s.lines} lines</small></button>`).join("");
+  document.getElementById("formats").innerHTML = FORMATS.map((f) => `<button class="tab" role="tab" aria-selected="${f.id === format}" data-id="${f.id}">${f.label}</button>`).join("");
+  const fmt = FORMATS.find((f) => f.id === format);
+  document.getElementById("path").innerHTML = `writes <b>${fmt.file(selected)}</b>`;
+  const cmd = `npx github:phlppgdfry/stack-rules add ${selected.join(" ")}${format === "claude" ? "" : " --format " + format}`;
+  document.getElementById("cmd").textContent = cmd;
+  const text = build();
+  const preview = document.getElementById("preview");
+  preview.classList.toggle("raw", raw);
+  document.getElementById("view").textContent = raw ? "Rendered" : "Raw";
+  document.getElementById("view").setAttribute("aria-pressed", raw);
+  if (raw || !window.marked) { const pre = document.createElement("pre"); pre.textContent = text; preview.replaceChildren(pre); }
+  else preview.innerHTML = marked.parse(text.replace(/^---\n[\s\S]*?\n---\n/gm, ""));
+  const qs = `?stacks=${selected.join(",")}${format === "claude" ? "" : "&format=" + format}`;
+  history.replaceState(null, "", qs);
+  store.set("sr-stacks", selected.join(",")); store.set("sr-format", format);
+}
+
+document.getElementById("stacks").addEventListener("click", (e) => {
+  const id = e.target.closest(".card")?.dataset.id; if (!id) return;
+  if (selected.includes(id)) { if (selected.length > 1) selected = selected.filter((s) => s !== id); else toast("Keep at least one stack"); }
+  else selected = [...selected, id];
+  render();
+});
+document.getElementById("formats").addEventListener("click", (e) => { const id = e.target.closest(".tab")?.dataset.id; if (id) { format = id; render(); } });
+document.getElementById("view").onclick = () => { raw = !raw; render(); };
+document.getElementById("copy").onclick = () => copy(build(), "File copied — paste it into " + FORMATS.find((f) => f.id === format).file(selected).split(",")[0]);
+document.getElementById("copycmd").onclick = () => copy(document.getElementById("cmd").textContent, "Command copied");
+document.getElementById("download").onclick = () => {
+  const name = format === "cursor" ? (selected.length === 1 ? `${selected[0]}.mdc` : "cursor-rules.mdc") : FORMATS.find((f) => f.id === format).file(selected).split("/").pop();
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([build()], { type: "text/markdown" })), download: name });
+  a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById("theme").onclick = () => {
+  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.dataset.theme = dark ? "light" : "dark"; store.set("sr-theme", document.documentElement.dataset.theme);
+};
+if (store.get("sr-theme")) document.documentElement.dataset.theme = store.get("sr-theme");
+render();
+</script>
+</body>
+</html>

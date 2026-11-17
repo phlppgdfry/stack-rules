@@ -1,0 +1,17 @@
+{
+  "name": "stack-rules",
+  "version": "1.0.0",
+  "description": "Curated CLAUDE.md, AGENTS.md, Cursor and Copilot rules per tech stack, with the reasoning behind every rule.",
+  "type": "module",
+  "bin": { "stack-rules": "bin/stack-rules.mjs" },
+  "files": ["bin", "stacks"],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check-repo.mjs",
+    "site": "node scripts/build-site.mjs"
+  },
+  "engines": { "node": ">=18" },
+  "repository": "github:phlppgdfry/stack-rules",
+  "license": "MIT",
+  "keywords": ["claude", "claude-code", "cursor", "agents-md", "copilot", "ai-coding", "rules"]
+}

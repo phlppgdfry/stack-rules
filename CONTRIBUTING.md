@@ -3,9 +3,12 @@
 ## Adding a new stack
 
 1. Create a folder under `stacks/<stack-name>/`
-2. Add a `CLAUDE.md` with rules for that stack
-3. Optionally add `.cursorrules` (same content, different format)
-4. Add a `README.md` explaining the stack-specific choices
+2. Add a `CLAUDE.md` with rules for that stack, starting with `# <Stack> — AI Coding Rules`
+3. Add the stack to the table in the main `README.md`
+4. Run `npm test && npm run check` — CI runs the same checks
+
+Do not add `.cursorrules`, `AGENTS.md` or other formats by hand: the CLI and the rule picker
+generate them from `CLAUDE.md`, so there is exactly one file to keep correct.
 
 ## Rules for rules
 
